@@ -11,7 +11,7 @@ const PhotoGallery = ({ images }) => {
 
 	return (
 		<div className="flex flex-row w-full h-full md:rounded-3xl overflow-clip relative bg-white">
-			<div className="w-full md:w-1/2 mr-2 overflow-clip">
+			<div className="w-full md:w-1/2 md:mr-2 overflow-clip">
 				{images && (
 					<img
 						src={images[0]}

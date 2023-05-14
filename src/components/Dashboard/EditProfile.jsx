@@ -10,18 +10,16 @@ import PromotionsForm from './Forms/PromotionsForm';
 
 const EditProfile = () => {
 	const [expanded, setExpanded] = useState(null);
-	const { userData } = useAuthContext();
-	const { creatorsProtectedData, getCreatorsProtectedData } =
-		useFirestoreContext();
+	const { userData, currentUser } = useAuthContext();
+	const { setCurrentUserInfo } = useFirestoreContext();
+
+	useEffect(() => {
+		setCurrentUserInfo();
+	}, [currentUser]);
 
 	const handleSectionClick = (section) => {
 		expanded == section ? setExpanded(null) : setExpanded(section);
 	};
-
-	useEffect(() => {
-		console.log(userData);
-		getCreatorsProtectedData(userData?.protected_data_id);
-	}, [userData]);
 
 	return (
 		<div className="flex flex-col bg-stone-900 h-full text-white w-full items-center justify-center gap-4">
@@ -37,21 +35,21 @@ const EditProfile = () => {
 				expanded={expanded}
 				handleSectionClick={handleSectionClick}
 			>
-				<BasicInfoForm creatorsProtectedData={creatorsProtectedData} />
+				<BasicInfoForm />
 			</EditorSection>
 			<EditorSection
 				sectionTitle="Social Media Accounts"
 				expanded={expanded}
 				handleSectionClick={handleSectionClick}
 			>
-				<SocialMediaAccountForm creatorsProtectedData={creatorsProtectedData} />
+				<SocialMediaAccountForm />
 			</EditorSection>
 			<EditorSection
 				sectionTitle="Photos"
 				expanded={expanded}
 				handleSectionClick={handleSectionClick}
 			>
-				<PhotosForm images={creatorsProtectedData?.images} />
+				<PhotosForm />
 			</EditorSection>
 			<EditorSection
 				sectionTitle="Promotions"

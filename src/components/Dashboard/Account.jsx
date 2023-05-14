@@ -6,7 +6,6 @@ import { useAuthContext } from '../../context/AuthContext';
 const Account = () => {
 	const { currentUser, userData } = useAuthContext();
 	const navigate = useNavigate();
-	console.log(currentUser);
 	return (
 		<div className="flex flex-col w-full h-full items-center justify-center gap-3 bg-stone-900 text-white">
 			<img

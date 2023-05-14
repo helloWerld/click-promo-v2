@@ -11,7 +11,7 @@ const SignUpModal = () => {
 	const [email, setEmail] = useState(null);
 	const [password, setPassword] = useState(null);
 	const [accountType, setAccountType] = useState('creator');
-	const { toggleSignUpModal } = useMenuContext();
+	const { state, dispatch } = useMenuContext();
 	const navigate = useNavigate();
 
 	const createAccountWithEmail = (e) => {
@@ -19,7 +19,7 @@ const SignUpModal = () => {
 		try {
 			loginWithEmail(email, password)
 				.then(console.log(accountType))
-				.then(toggleSignUpModal);
+				.then(dispatch({ type: 'TOGGLE_SIGNUP_MODAL' }));
 		} catch (error) {
 			console.error;
 		}
@@ -28,7 +28,9 @@ const SignUpModal = () => {
 	const createAccountWithGoogle = (e) => {
 		e.preventDefault();
 		try {
-			loginWithGoogle().then(console.log(accountType)).then(toggleSignUpModal);
+			loginWithGoogle()
+				.then(console.log(accountType))
+				.then(dispatch({ type: 'TOGGLE_SIGNUP_MODAL' }));
 		} catch (error) {
 			console.error;
 		}
@@ -39,7 +41,7 @@ const SignUpModal = () => {
 			className={
 				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-30 items-center justify-center p-0 m-0 bg-scroll'
 			}
-			onClick={toggleSignUpModal}
+			onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 		>
 			<div
 				className="flex flex-col bg-white rounded-xl w-5/6 md:w-1/2 xl:w-1/3 3xl:w-1/4 h-auto z-40 rounded-lg border border-gray-600 shadow-xl"
@@ -49,7 +51,7 @@ const SignUpModal = () => {
 					<AiOutlineClose
 						size={18}
 						className="cursor-pointer"
-						onClick={toggleSignUpModal}
+						onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 					/>
 					<img src={bitpromo} className="w-1/3 mb-5 mx-auto" />
 					<div className="flex flex-col">

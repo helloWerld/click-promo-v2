@@ -10,14 +10,14 @@ const LoginModal = () => {
 	const { loginWithEmail, loginWithGoogle } = useAuthContext();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { toggleLoginModal } = useMenuContext();
+	const { state, dispatch } = useMenuContext();
 	const navigate = useNavigate();
 
 	const signIn = async (e) => {
 		e.preventDefault();
 		try {
 			await loginWithEmail(email, password)
-				.then(toggleLoginModal)
+				.then(dispatch({ type: 'TOGGLE_LOGIN_MODAL' }))
 				.then(navigate('/'));
 		} catch (error) {
 			console.error;
@@ -26,7 +26,7 @@ const LoginModal = () => {
 
 	const loginUserWithGoogle = () => {
 		try {
-			loginWithGoogle().then(toggleLoginModal);
+			loginWithGoogle().then(dispatch({ type: 'TOGGLE_LOGIN_MODAL' }));
 		} catch (error) {
 			console.error;
 		}
@@ -37,7 +37,7 @@ const LoginModal = () => {
 			className={
 				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-30 items-center justify-center p-0 m-0 bg-scroll'
 			}
-			onClick={toggleLoginModal}
+			onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 		>
 			<div
 				className="flex flex-col bg-white rounded-xl w-5/6 md:w-1/2 xl:w-1/3 3xl:w-1/4 h-auto z-40 rounded-lg border border-gray-600 shadow-xl"
@@ -47,7 +47,7 @@ const LoginModal = () => {
 					<AiOutlineClose
 						size={18}
 						className="cursor-pointer"
-						onClick={toggleLoginModal}
+						onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 					/>
 					<img src={bitpromo} className="w-1/3 mb-8 mx-auto" />
 					<h2 className="text-xl font-semibold">Login To Your Account</h2>

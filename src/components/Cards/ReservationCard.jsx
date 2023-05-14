@@ -8,11 +8,12 @@ const ReservationCard = ({ creator }) => {
 	const [selectedPromoDate, setSelectedPromoDate] = useState(null);
 	const [promotions, setPromotions] = useState();
 
-	const { creatorsProtectedData } = useFirestoreContext();
+	const { state } = useFirestoreContext();
+	const { creatorProtectedData } = state;
 
 	useEffect(() => {
-		setPromotions(creatorsProtectedData?.promotions);
-	}, [creatorsProtectedData]);
+		setPromotions(creatorProtectedData?.promotions);
+	}, [creatorProtectedData]);
 
 	useEffect(() => {
 		promotions && setSelectedPromo(promotions[0]);

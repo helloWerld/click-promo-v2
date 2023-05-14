@@ -27,15 +27,27 @@ const Firestore = {
 		});
 	},
 	readDoc: (...args) => {
-		const docId = args;
+		const [docId, collection_name] = args;
 		console.log(docId);
-		const ref = doc(db, 'creators_protected_data', docId.toString());
+		const ref = doc(db, collection_name, docId.toString());
 		return new Promise(async (resolve) => {
 			try {
 				const docSnap = await getDoc(ref);
 				resolve(docSnap.data());
 			} catch (e) {
 				console.log(e);
+			}
+		});
+	},
+	writeDoc: (...args) => {
+		const [inputs, collection_name, docId] = args;
+		return new Promise(async (resolve) => {
+			try {
+				const docRef = doc(db, collection_name, docId);
+				await setDoc(docRef, inputs);
+				resolve('doc successfully updated');
+			} catch (error) {
+				console.error(error);
 			}
 		});
 	},

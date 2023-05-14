@@ -12,14 +12,10 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { logout, currentUser } = useAuthContext();
-	const {
-		search,
-		loginModalOpen,
-		signUpModalOpen,
-		toggleLoginModal,
-		toggleSignUpModal,
-	} = useMenuContext();
+	const { menuState, dispatch } = useMenuContext();
 	const [menuOpen, setMenuOpen] = useState(false);
+	const { activeFilter, searchTerm, loginModalOpen, signUpModalOpen } =
+		menuState;
 
 	const handleLogOut = async () => {
 		console.log('logout');
@@ -48,7 +44,14 @@ const Navbar = () => {
 									type="text"
 									placeholder="Search Creators..."
 									className="mx-2 bg-transparent outline-none"
-									onChange={(e) => search(e.target.value)}
+									onChange={(e) => {
+										activeFilter &&
+											dispatch({ type: 'SET_ACTIVE_FILTER', payload: null });
+										dispatch({
+											type: 'SET_SEARCH_TERM',
+											payload: e.target.value,
+										});
+									}}
 								/>
 								<button className="p-2 text-lg bg-gradient-to-tl from-amber-300 to-amber-600 rounded-full hover:shadow-md">
 									<RxMagnifyingGlass />
@@ -76,7 +79,7 @@ const Navbar = () => {
 								) : (
 									<div
 										className="flex flex-row items-center gap-3 hover:bg-gray-100 py-3 px-5 cursor-pointer"
-										onClick={toggleSignUpModal}
+										onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 									>
 										<AiOutlineUserAdd className="text-xl font-semibold" />{' '}
 										Create Account
@@ -92,7 +95,7 @@ const Navbar = () => {
 								) : (
 									<div
 										className="flex flex-row items-center gap-3 hover:bg-gray-100 py-3 px-5 cursor-pointer"
-										onClick={toggleLoginModal}
+										onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 									>
 										<AiOutlineLogin className="text-xl font-semibold" /> Log In
 									</div>

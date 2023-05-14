@@ -15,26 +15,17 @@ import AppWrap from '../wrapper/AppWrap';
 import { useFirestoreContext } from '../context/FirestoreContext';
 
 const CreatorDetailPage = () => {
-	const {
-		creatorsPublicData,
-		creatorsProtectedData,
-		getCreatorsProtectedData,
-	} = useFirestoreContext();
+	const { state, getCreatorData, getCreators } = useFirestoreContext();
 	const { protectedId } = useParams();
 	const [loading, setLoading] = useState(true);
-	const [creator, setCreator] = useState();
+	const { creators, creatorPublicData, creatorProtectedData } = state;
 
 	useEffect(() => {
 		console.log(protectedId);
 		setLoading(true);
-		getCreatorsProtectedData(protectedId);
-		setCreator(
-			creatorsPublicData?.filter(
-				(data) => data?.creator_protected_data_ID == protectedId
-			)[0]
-		);
+		getCreatorData(protectedId);
 		setLoading(false);
-	}, [creatorsPublicData]);
+	}, []);
 
 	return (
 		<>
@@ -65,36 +56,39 @@ const CreatorDetailPage = () => {
 					<div className="flex justify-center text-gray-800 mb-10">
 						<div className="flex flex-col w-full">
 							<h1 className="flex relative text-4xl font-bold mt-5 px-3 md:px-0 inline items-center">
-								{creatorsProtectedData?.name}
+								{creatorProtectedData?.name}
 							</h1>
 							<div className="flex flex-row items-center gap-3 mt-2 px-3 md:px-0">
 								<div className="flex flex-row items-center">
 									<AiFillStar />
-									<p>{creatorsProtectedData?.overallRating}</p>
+									<p>{creatorProtectedData?.overallRating}</p>
 								</div>
 								<p className="underline">
-									{creatorsProtectedData?.numberOfReviews} Reviews
+									{creatorProtectedData?.numberOfReviews} Reviews
 								</p>
 							</div>
 							<div className="flex flex-row justify-center mt-5">
-								<PhotoGallery images={creatorsProtectedData?.images} />
+								<PhotoGallery images={creatorProtectedData?.images} />
 							</div>
 							<div className="flex flex-col px-5 md:px-0 md:flex-row md:mt-10 gap-5 md:gap-12">
 								<div className="w-full md:w-3/5 mt-5 md:mt-0">
 									<div className="relative text-xl md:text-2xl mb-4 font-semibold">
-										{creatorsProtectedData?.headline}
+										{creatorProtectedData?.headline}
 									</div>
 									<div className="relative flex flex-row text-gray-600">
-										<CreatorTopicList topics={creator?.topics} iconSize={20} />
+										<CreatorTopicList
+											topics={creatorPublicData?.topics}
+											iconSize={20}
+										/>
 									</div>
 									<div className="relative text-sm md:text-base mt-5 text-gray-600">
-										{creatorsProtectedData?.description}
+										{creatorProtectedData?.description}
 									</div>
 									<hr className="my-6" />
 									<div className="relative">
 										<h2 className="font-semibold text-sm mb-2">Socials</h2>
 										<SocialPlatformList
-											creatorSocials={creator?.socials}
+											creatorSocials={creatorPublicData?.socials}
 											subs
 											size={32}
 										/>
@@ -102,26 +96,26 @@ const CreatorDetailPage = () => {
 									<hr className="my-6" />
 									<div className="relative">
 										<PromoOptionsList
-											creator={creator}
-											promotions={creatorsProtectedData?.promotions}
+											creator={creatorPublicData}
+											promotions={creatorProtectedData?.promotions}
 											title="Promo Options"
 										/>
 									</div>
 								</div>
 								<div className="w-full h-full md:w-2/5 md:mt-0">
-									<ReservationCard creator={creatorsProtectedData} />
+									<ReservationCard creator={creatorProtectedData} />
 								</div>
 							</div>
 							<hr className="my-8 border border-gray-200" />
 							<div className="flex flex-col px-3">
-								{creatorsProtectedData?.demographics && (
+								{creatorProtectedData?.demographics && (
 									<div className="flex flex-col gap-3 mb-5">
-										<Demographics creator={creatorsProtectedData} />
+										<Demographics creator={creatorProtectedData} />
 									</div>
 								)}
 								{true && (
 									<div className="flex flex-col gap-3 mb-5">
-										<Reviews reviews={creatorsProtectedData?.reviews} />
+										<Reviews reviews={creatorProtectedData?.reviews} />
 									</div>
 								)}
 							</div>

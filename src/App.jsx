@@ -55,12 +55,12 @@ const AppRoutes = () => {
 };
 
 function App() {
-	const { getCreatorsPublicData } = useFirestoreContext();
+	const { getCreators } = useFirestoreContext();
 	const { authenticate } = useAuthContext();
 
 	useEffect(() => {
 		authenticate();
-		getCreatorsPublicData();
+		getCreators();
 	}, []);
 
 	return (

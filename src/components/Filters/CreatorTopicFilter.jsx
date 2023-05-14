@@ -4,7 +4,7 @@ import { useMenuContext } from '../../context/MenuContext';
 import reference from '../../misc/reference';
 
 const CreatorTopicFilter = () => {
-	const { activeFilter, setFilterSelection } = useMenuContext();
+	const { menuState, dispatch } = useMenuContext();
 	const [allTopics, setAllTopics] = useState();
 	useEffect(() => {
 		setAllTopics(reference?.allTopics);
@@ -16,7 +16,7 @@ const CreatorTopicFilter = () => {
 				<div
 					key="all topics"
 					className={`flex flex-col cursor-pointer items-center text-gray-500 hover:text-gray-800 border-b-2 border-transparent`}
-					onClick={() => setFilterSelection(null)}
+					onClick={() => dispatch({ type: 'SET_ACTIVE_FILTER', payload: null })}
 				>
 					<div className={`text-3xl`}>
 						<BsFillGridFill />
@@ -27,15 +27,17 @@ const CreatorTopicFilter = () => {
 					<div
 						key={filterTopic.name}
 						className={`flex flex-col cursor-pointer items-center text-gray-500 hover:text-gray-800 border-b-2 ${
-							activeFilter === filterTopic.name
+							menuState.activeFilter === filterTopic.name
 								? 'border-black font-semibold text-black'
 								: 'border-transparent'
 						}`}
-						onClick={() => setFilterSelection(filterTopic.name)}
+						onClick={() =>
+							dispatch({ type: 'SET_ACTIVE_FILTER', payload: filterTopic.name })
+						}
 					>
 						<div
 							className={`text-3xl ${
-								activeFilter === filterTopic.name
+								menuState.activeFilter === filterTopic.name
 									? 'font-semibold  text-gray-800'
 									: ''
 							}`}
@@ -44,7 +46,7 @@ const CreatorTopicFilter = () => {
 						</div>
 						<div
 							className={`text-xs my-1 whitespace-nowrap ${
-								activeFilter === filterTopic.name
+								menuState.activeFilter === filterTopic.name
 									? 'font-semibold  text-gray-800'
 									: ''
 							}`}

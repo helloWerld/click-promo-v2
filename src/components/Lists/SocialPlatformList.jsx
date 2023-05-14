@@ -66,7 +66,7 @@ const SocialPlatformList = ({ creatorSocials, subs, size, fill, onclick }) => {
 							key={social.socialName}
 							className="flex flex-col transition-all duration-300 ease-in-out items-center mr-8 cursor-pointer grayscale hover:grayscale-0 hover:scale-110"
 							onClick={() => {
-								window.open(`${social.url}`, '_blank');
+								window.open(`${social?.url}`, '_blank');
 							}}
 						>
 							{fill
@@ -77,7 +77,7 @@ const SocialPlatformList = ({ creatorSocials, subs, size, fill, onclick }) => {
 								: allPlatforms.filter(
 										(socialPlatform) =>
 											socialPlatform.name === social.socialName
-								  )[0].fill}
+								  )[0]?.fill}
 							<div className="flex flex-row items-center mt-2 gap-1">
 								<BsPeopleFill size={14} />
 								<p className="text-xs">
@@ -96,11 +96,11 @@ const SocialPlatformList = ({ creatorSocials, subs, size, fill, onclick }) => {
 								? allPlatforms.filter(
 										(socialPlatform) =>
 											socialPlatform.name === social.socialName
-								  )[0].fill
+								  )[0]?.fill
 								: allPlatforms.filter(
 										(socialPlatform) =>
 											socialPlatform.name === social.socialName
-								  )[0].icon}
+								  )[0]?.icon}
 						</div>
 				  ))}
 		</div>

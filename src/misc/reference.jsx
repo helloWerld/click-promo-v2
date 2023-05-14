@@ -112,6 +112,16 @@ const reference = {
 			name: 'Airdrops',
 		},
 	],
+	allSocials: [
+		'Youtube',
+		'Twitter',
+		'TikTok',
+		'Instagram',
+		'Facebook',
+		'Reddit',
+		'Discord',
+		'Telegram',
+	],
 };
 
 export default reference;

@@ -1,43 +1,49 @@
-import { createContext, useMemo, useContext, useState } from 'react';
+import {
+	createContext,
+	useMemo,
+	useContext,
+	useState,
+	useReducer,
+} from 'react';
 
 const Context = createContext();
 
-const MenuProvider = ({ children }) => {
-	const [activeFilter, setActiveFilter] = useState(null);
-	const [searchTerm, setSearchTerm] = useState(null);
-	const [loginModalOpen, setLoginModalOpen] = useState(false);
-	const [signUpModalOpen, setSignUpModalOpen] = useState(false);
-	const [dashboard, setDashboard] = useState('Account');
+const initialMenuState = {
+	activeFilter: null,
+	dashboard: 'Account',
+	loginModalOpen: false,
+	searchTerm: null,
+	signUpModalOpen: false,
+};
 
-	const setFilterSelection = (filterName) => setActiveFilter(filterName);
-	const search = (term) => setSearchTerm(term);
-	const toggleLoginModal = () => setLoginModalOpen(!loginModalOpen);
-	const toggleSignUpModal = () => setSignUpModalOpen(!signUpModalOpen);
-	const selectDashboard = (selection) => setDashboard(selection);
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'SET_ACTIVE_FILTER':
+			console.log('set active filter ', action.payload);
+			return { ...state, activeFilter: action.payload };
+		case 'SET_SEARCH_TERM':
+			console.log('set search term ', action.payload);
+			return { ...state, searchTerm: action.payload };
+		case 'TOGGLE_LOGIN_MODAL':
+			return { ...state, loginModalOpen: !state.loginModalOpen };
+		case 'TOGGLE_SIGNUP_MODAL':
+			return { ...state, signUpModalOpen: !state.signUpModalOpen };
+		case 'SET_DASHBOARD_SECTION':
+			return { ...state, dashboard: action.payload };
+		default:
+			return state;
+	}
+};
+
+const MenuProvider = ({ children }) => {
+	const [menuState, dispatch] = useReducer(reducer, initialMenuState);
 
 	const value = useMemo(() => {
 		return {
-			activeFilter,
-			setFilterSelection,
-			search,
-			searchTerm,
-			loginModalOpen,
-			signUpModalOpen,
-			toggleLoginModal,
-			toggleSignUpModal,
-			selectDashboard,
-			dashboard,
+			menuState,
+			dispatch,
 		};
-	}, [
-		search,
-		searchTerm,
-		loginModalOpen,
-		signUpModalOpen,
-		toggleLoginModal,
-		toggleSignUpModal,
-		selectDashboard,
-		dashboard,
-	]);
+	}, [menuState, dispatch]);
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 

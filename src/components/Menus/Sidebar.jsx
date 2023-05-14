@@ -10,8 +10,9 @@ import { RiQuestionnaireFill } from 'react-icons/ri';
 
 const Sidebar = () => {
 	const { logout } = useAuthContext();
-	const { selectDashboard, dashboard } = useMenuContext();
+	const { menuState, dispatch } = useMenuContext();
 	const navigate = useNavigate();
+	const { dashboard } = menuState;
 
 	const menuItems = [
 		{
@@ -65,7 +66,11 @@ const Sidebar = () => {
 								  }
 								: menuItem.name == 'Home'
 								? () => navigate('/')
-								: () => selectDashboard(menuItem.name)
+								: () =>
+										dispatch({
+											type: 'SET_DASHBOARD_SECTION',
+											payload: menuItem.name,
+										})
 						}
 					>
 						<p className="hidden md:flex md:justify-center">{menuItem.name}</p>

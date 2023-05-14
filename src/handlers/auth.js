@@ -49,7 +49,6 @@ const FirebaseAuth = {
 			}
 		});
 	},
-
 	// Google Authentication
 	signInWithGoogle: () => {
 		return new Promise((resolve) => {

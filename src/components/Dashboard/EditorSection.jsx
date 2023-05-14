@@ -13,7 +13,7 @@ const EditorSection = ({
 				expanded == sectionTitle
 					? 'border-white bg-stone-950'
 					: 'border-white/40'
-			} flex flex-col border-y w-1/2 transition duration-700 ease-in-out`}
+			} flex flex-col border-y w-full md:w-1/2 transition duration-700 ease-in-out`}
 		>
 			<div
 				onClick={() => handleSectionClick(sectionTitle)}

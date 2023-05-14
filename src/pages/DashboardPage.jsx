@@ -7,7 +7,8 @@ import Requests from '../components/Dashboard/Requests';
 import Reservations from '../components/Dashboard/Reservations';
 
 const DashboardPage = () => {
-	const { dashboard } = useMenuContext();
+	const { menuState } = useMenuContext();
+	const { dashboard } = menuState;
 
 	return (
 		<div className="flex flex-col-reverse md:flex-row h-screen">
