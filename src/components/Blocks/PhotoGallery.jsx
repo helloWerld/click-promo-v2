@@ -15,20 +15,20 @@ const PhotoGallery = ({ images }) => {
 				{images && (
 					<img
 						src={images[0]}
-						className="flex aspect-square w-full h-full object-cover hover:scale-110 transition duration-700 ease-in-out hover:saturate-150 cursor-pointer"
+						className="flex aspect-square w-full h-full object-cover hover:scale-110 transition duration-700 ease-in-out hover:contrast-125 cursor-pointer"
 						onClick={toggleShowFullGallery}
 					/>
 				)}
 			</div>
 			<div className="hidden md:grid grid-cols-2 gap-2 w-1/2">
-				{images?.slice(1).map((image) => (
+				{images?.slice(1, 5).map((image) => (
 					<div
 						key={image}
 						className="hidden md:flex h-full w-full aspect-square overflow-clip"
 					>
 						<img
 							src={image}
-							className="hidden md:flex h-full w-full aspect-square object-cover transition duration-700 ease-in-out hover:scale-110 hover:saturate-150 cursor-pointer"
+							className="hidden md:flex h-full w-full aspect-square object-cover transition duration-700 ease-in-out hover:scale-110 hover:contrast-150 cursor-pointer"
 							onClick={toggleShowFullGallery}
 						/>
 					</div>

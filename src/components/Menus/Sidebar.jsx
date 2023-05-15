@@ -42,7 +42,7 @@ const Sidebar = () => {
 	];
 
 	return (
-		<div className="flex flex-row md:flex-col h-2/12 w-full md:h-screen md:w-2/12 bg-black text-white justify-around md:justify-between md:border-x-2 md:border-black">
+		<div className="flex flex-row fixed md:relative bottom-0 md:flex-col h-2/12 w-full md:h-screen md:w-2/12 bg-black text-white justify-around md:justify-between md:border-x-2 md:border-black">
 			<div className="hidden md:flex justify-center mt-4 px-1">
 				<Link to="/">
 					<img src={logo} className="w-40" />

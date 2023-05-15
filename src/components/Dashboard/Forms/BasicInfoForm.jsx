@@ -141,9 +141,9 @@ const BasicInfoForm = () => {
 			</div>
 			<button
 				type="submit"
-				className="w-32 ml-auto border border-amber-400 rounded-lg px-3 py-2 text-amber-400 hover:bg-amber-400 hover:text-black"
+				className="w-fit ml-auto border border-amber-400 rounded-lg px-3 py-2 text-amber-400 hover:bg-amber-400 hover:text-black"
 			>
-				Save
+				Save Changes
 			</button>
 		</form>
 	);

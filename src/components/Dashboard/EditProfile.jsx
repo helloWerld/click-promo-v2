@@ -22,42 +22,44 @@ const EditProfile = () => {
 	};
 
 	return (
-		<div className="flex flex-col bg-stone-900 h-full text-white w-full items-center justify-center gap-4">
-			<h2 className="text-2xl mb-2">Edit Your Brand Profile</h2>
-			<Link
-				to={`/creators/${userData?.protected_data_id}`}
-				className="px-3 py-2 mb-10 border border-amber-400 text-amber-400 rounded-lg hover:bg-black"
-			>
-				View Profile
-			</Link>
-			<EditorSection
-				sectionTitle="Basic Info"
-				expanded={expanded}
-				handleSectionClick={handleSectionClick}
-			>
-				<BasicInfoForm />
-			</EditorSection>
-			<EditorSection
-				sectionTitle="Social Media Accounts"
-				expanded={expanded}
-				handleSectionClick={handleSectionClick}
-			>
-				<SocialMediaAccountForm />
-			</EditorSection>
-			<EditorSection
-				sectionTitle="Photos"
-				expanded={expanded}
-				handleSectionClick={handleSectionClick}
-			>
-				<PhotosForm />
-			</EditorSection>
-			<EditorSection
-				sectionTitle="Promotions"
-				expanded={expanded}
-				handleSectionClick={handleSectionClick}
-			>
-				<PromotionsForm />
-			</EditorSection>
+		<div className="flex items-start bg-stone-900 h-full w-full overflow-y-auto">
+			<div className="flex flex-col bg-stone-900 text-white w-full items-center justify-center gap-4 py-24">
+				<h2 className="text-2xl mb-2">Edit Your Brand Profile</h2>
+				<Link
+					to={`/creators/${userData?.protected_data_id}`}
+					className="px-3 py-2 mb-10 border border-amber-400 text-amber-400 rounded-lg hover:bg-black"
+				>
+					View Profile
+				</Link>
+				<EditorSection
+					sectionTitle="Basic Info"
+					expanded={expanded}
+					handleSectionClick={handleSectionClick}
+				>
+					<BasicInfoForm />
+				</EditorSection>
+				<EditorSection
+					sectionTitle="Social Media Accounts"
+					expanded={expanded}
+					handleSectionClick={handleSectionClick}
+				>
+					<SocialMediaAccountForm />
+				</EditorSection>
+				<EditorSection
+					sectionTitle="Images"
+					expanded={expanded}
+					handleSectionClick={handleSectionClick}
+				>
+					<PhotosForm />
+				</EditorSection>
+				<EditorSection
+					sectionTitle="Promotions"
+					expanded={expanded}
+					handleSectionClick={handleSectionClick}
+				>
+					<PromotionsForm />
+				</EditorSection>
+			</div>
 		</div>
 	);
 };

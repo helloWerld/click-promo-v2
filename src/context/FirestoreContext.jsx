@@ -8,11 +8,26 @@ const Context = createContext();
 
 const initialState = {
 	// list of all creators from database
-	creators: null,
+	creators: [],
 	// single creator's public data
-	creatorPublicData: null,
+	creatorPublicData: {
+		avatar: '',
+		creator_protected_data_ID: '',
+		message: '',
+		name: '',
+		overallRating: null,
+		socials: [],
+		topics: [],
+	},
 	// single creator's protected data
-	creatorProtectedData: null,
+	creatorProtectedData: {
+		creator_public_data_ID: '',
+		description: '',
+		headline: '',
+		images: [],
+		name: '',
+		promotions: [],
+	},
 	// signed in user's protected data
 	currentUserProtectedInfo: {
 		creator_public_data_ID: '',
@@ -21,6 +36,7 @@ const initialState = {
 		images: [],
 		name: '',
 		promotions: [],
+		imageUpload: '',
 	},
 	//sign in users' public data
 	currentUserPublicInfo: {
@@ -47,6 +63,7 @@ const reducer = (state, action) => {
 		case 'SET_CURRENT_USER_PUBLIC_INFO':
 			return { ...state, currentUserPublicInfo: action.payload };
 		case 'UPDATE_CURRENT_USER_PROTECTED_INFO':
+			console.log('update current user protected');
 			return {
 				...state,
 				currentUserProtectedInfo: {
