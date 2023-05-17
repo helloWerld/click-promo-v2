@@ -8,26 +8,11 @@ const Context = createContext();
 
 const initialState = {
 	// list of all creators from database
-	creators: [],
+	creators: null,
 	// single creator's public data
-	creatorPublicData: {
-		avatar: '',
-		creator_protected_data_ID: '',
-		message: '',
-		name: '',
-		overallRating: null,
-		socials: [],
-		topics: [],
-	},
+	creatorPublicData: null,
 	// single creator's protected data
-	creatorProtectedData: {
-		creator_public_data_ID: '',
-		description: '',
-		headline: '',
-		images: [],
-		name: '',
-		promotions: [],
-	},
+	creatorProtectedData: null,
 	// signed in user's protected data
 	currentUserProtectedInfo: {
 		creator_public_data_ID: '',
@@ -101,23 +86,13 @@ const FirestoreProvider = ({ children }) => {
 					dispatch({ type: 'SET_CREATOR_PROTECTED_DATA', payload: response });
 					return response;
 				})
-				.then((response) =>
-					state.creators == null
-						? readDoc(
-								response.creator_public_data_ID,
-								'creators_public_data'
-						  ).then((response) =>
-								dispatch({
-									type: 'SET_CREATOR_PUBLIC_DATA',
-									payload: response,
-								})
-						  )
-						: dispatch({
-								type: 'SET_CREATOR_PUBLIC_DATA',
-								payload: state.creators.filter(
-									(creator) => creator?.id == response.creator_public_data_ID
-								)[0],
-						  })
+				.then(() =>
+					dispatch({
+						type: 'SET_CREATOR_PUBLIC_DATA',
+						payload: state?.creators?.filter(
+							(creator) => creator.creator_protected_data_ID == protectedId
+						)[0],
+					})
 				);
 		} catch (error) {
 			console.error(error);

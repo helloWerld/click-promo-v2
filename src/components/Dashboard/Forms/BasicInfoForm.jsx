@@ -20,7 +20,7 @@ const BasicInfoForm = () => {
 		>
 			<div className="flex flex-row items-start">
 				<label className="w-1/3 text-xl text-start font-semibold">
-					Brand Name
+					Display Name
 				</label>
 				<input
 					type="text"

@@ -15,17 +15,17 @@ import AppWrap from '../wrapper/AppWrap';
 import { useFirestoreContext } from '../context/FirestoreContext';
 
 const CreatorDetailPage = () => {
-	const { state, getCreatorData, getCreators } = useFirestoreContext();
+	const { state, getCreatorData } = useFirestoreContext();
 	const { protectedId } = useParams();
 	const [loading, setLoading] = useState(true);
-	const { creators, creatorPublicData, creatorProtectedData } = state;
+	const { creatorPublicData, creatorProtectedData } = state;
 
 	useEffect(() => {
 		console.log(protectedId);
 		setLoading(true);
 		getCreatorData(protectedId);
 		setLoading(false);
-	}, []);
+	}, [state.creators]);
 
 	return (
 		<>
@@ -53,7 +53,7 @@ const CreatorDetailPage = () => {
 				</div>
 			) : (
 				<>
-					<div className="flex justify-center text-gray-800 mb-10">
+					<div className="flex justify-center text-gray-800 my-8">
 						<div className="flex flex-col w-full">
 							<h1 className="flex relative text-4xl font-bold mt-5 px-3 md:px-0 inline items-center">
 								{creatorProtectedData?.name}
@@ -90,7 +90,6 @@ const CreatorDetailPage = () => {
 										<SocialPlatformList
 											creatorSocials={creatorPublicData?.socials}
 											subs
-											size={32}
 										/>
 									</div>
 									<hr className="my-6" />
@@ -98,7 +97,6 @@ const CreatorDetailPage = () => {
 										<PromoOptionsList
 											creator={creatorPublicData}
 											promotions={creatorProtectedData?.promotions}
-											title="Promo Options"
 										/>
 									</div>
 								</div>

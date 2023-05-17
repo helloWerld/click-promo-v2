@@ -9,7 +9,7 @@ import { useMenuContext } from '../../context/MenuContext';
 
 const CreatorCard = ({ creator }) => {
 	const { currentUser } = useAuthContext();
-	const { toggleSignUpModal, toggleLoginModal } = useMenuContext();
+	const { menuState, dispatch } = useMenuContext();
 	const {
 		creator_protected_data_ID,
 		name,
@@ -46,13 +46,13 @@ const CreatorCard = ({ creator }) => {
 								Login To View Details
 							</h3>
 							<div
-								onClick={toggleLoginModal}
+								onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 								className="w-40 px-3 py-2 bg-gradient-to-tl from-amber-300 to-amber-600 text-black rounded-lg hover:scale-105"
 							>
 								Log In
 							</div>
 							<div
-								onClick={toggleSignUpModal}
+								onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 								className="w-40 px-3 py-2 bg-black text-amber-400 rounded-lg hover:scale-105"
 							>
 								Create Account
@@ -71,10 +71,6 @@ const CreatorCard = ({ creator }) => {
 								className="flex rounded-2xl top-0 w-full h-full bg-gray-500"
 							/>
 						)}
-						{/* <AiFillHeart
-						size={26}
-						className="absolute text-white top-4 right-4"
-					/> */}
 					</div>
 					<div className="flex flex-col w-full px-2 pt-2">
 						<div className="flex flex-row items-center justify-between text-xl text-gray-800">

@@ -25,8 +25,16 @@ const PhotosForm = () => {
 			});
 	};
 
-	const handleAddToGallery = () => {
-		dispatch({
+	const handleAddToGallery = async () => {
+		!currentUserProtectedInfo.images[0] &&
+			(await dispatch({
+				type: 'UPDATE_CURRENT_USER_PUBLIC_INFO',
+				payload: {
+					key: 'avatar',
+					value: imageUpload,
+				},
+			}));
+		await dispatch({
 			type: 'UPDATE_CURRENT_USER_PROTECTED_INFO',
 			payload: {
 				key: 'images',
@@ -47,6 +55,13 @@ const PhotosForm = () => {
 				value: newImages,
 			},
 		});
+		dispatch({
+			type: 'UPDATE_CURRENT_USER_PUBLIC_INFO',
+			payload: {
+				key: 'avatar',
+				value: newImages[0],
+			},
+		});
 	};
 
 	const handleChangeThumbnail = (image) => {
@@ -59,6 +74,13 @@ const PhotosForm = () => {
 			payload: {
 				key: 'images',
 				value: newImages,
+			},
+		});
+		dispatch({
+			type: 'UPDATE_CURRENT_USER_PUBLIC_INFO',
+			payload: {
+				key: 'avatar',
+				value: newImages[0],
 			},
 		});
 	};
@@ -83,7 +105,7 @@ const PhotosForm = () => {
 							className="flex flex-col cursor-pointer text-center justify-center items-center gap-2"
 						>
 							<BsCardImage className="text-5xl" />
-							<p>Upload New Image</p>
+							<p>Upload Image</p>
 						</label>
 						<input
 							type="file"
@@ -115,78 +137,83 @@ const PhotosForm = () => {
 				</div>
 			</form>
 			<hr className="flex mx-auto w-11/12 my-4" />
-			<h2 className="w-full text-center mt-2 mb-4 text-2xl font-semibold">
-				Image Gallery
-			</h2>
-
-			<p className="w-1/2 text-center bg-amber-500 text-black pt-2 font-semibold rounded-t-lg">
-				Thumbnail Image
-			</p>
-			<div className="flex flex-row">
-				<div className="w-1/2 h-max text-center relative">
-					<div
-						onClick={() => handleDelete(0)}
-						className="flex items-center justify-center absolute bottom-2 right-2 bg-rose-500/50 hover:bg-rose-500 h-12 w-12 rounded-tl border border-rose-500 cursor-pointer"
-					>
-						<BsTrash3Fill className=" text-3xl" />
-					</div>
-					<img
-						className="w-full border-8 border-amber-500 aspect-square overflow-clip"
-						src={currentUserProtectedInfo?.images[0]}
-					/>
-				</div>
-				<div className="w-1/2 grid grid-cols-2 gap-2 pl-2">
-					{currentUserProtectedInfo?.images?.slice(1, 5).map((image) => (
-						<div
-							key={image}
-							className="relative flex h-full w-full aspect-square overflow-clip"
-						>
+			{currentUserProtectedInfo.images[0] && (
+				<>
+					<h2 className="w-full text-center mt-2 mb-4 text-2xl font-semibold">
+						Image Gallery
+					</h2>
+					<p className="w-1/2 text-center bg-amber-500 text-black pt-2 font-semibold rounded-t-lg">
+						Thumbnail Image
+					</p>
+					<div className="flex flex-row">
+						<div className="w-1/2 h-max text-center relative">
 							<div
-								onClick={() => handleDelete(image)}
-								className="flex items-center justify-center absolute bottom-0 right-0 bg-rose-500/50 hover:bg-rose-500 h-8 w-8 rounded-tl border border-rose-500 cursor-pointer"
+								onClick={() =>
+									handleDelete(currentUserProtectedInfo?.images[0])
+								}
+								className="flex items-center justify-center absolute bottom-2 right-2 bg-rose-500/50 hover:bg-rose-500 h-12 w-12 rounded-tl border border-rose-500 cursor-pointer"
 							>
-								<BsTrash3Fill className=" text-xl" />
-							</div>
-							<div
-								onClick={(e) => handleChangeThumbnail(image)}
-								className="flex items-center justify-center absolute bottom-0 left-0 bg-amber-500/50 hover:bg-amber-500 h-8 w-8 rounded-tr border border-amber-500 cursor-pointer"
-							>
-								<IoMdImage className=" text-xl" />
+								<BsTrash3Fill className=" text-3xl" />
 							</div>
 							<img
-								src={image}
-								className="flex h-full w-full aspect-square object-cover border-2 border-white"
+								className="w-full border-8 border-amber-500 aspect-square object-cover"
+								src={currentUserProtectedInfo?.images[0]}
 							/>
 						</div>
-					))}
-				</div>
-			</div>
-			<div className="w-full grid grid-cols-4 gap-2 mt-2">
-				{currentUserProtectedInfo?.images?.slice(5).map((image) => (
-					<div
-						key={image}
-						className="relative flex h-full w-full aspect-square overflow-clip"
-					>
-						<div
-							onClick={() => handleDelete(image)}
-							className="flex items-center justify-center absolute bottom-0 right-0 bg-rose-500/50 hover:bg-rose-500 h-8 w-8 rounded-tl border border-rose-500 cursor-pointer"
-						>
-							<BsTrash3Fill className=" text-xl" />
+						<div className="w-1/2 grid grid-cols-2 grid-rows-2 gap-2 pl-2">
+							{currentUserProtectedInfo?.images?.slice(1, 5).map((image) => (
+								<div
+									key={image}
+									className="relative flex h-full w-full aspect-square object-cover"
+								>
+									<div
+										onClick={() => handleDelete(image)}
+										className="flex items-center justify-center absolute bottom-0 right-0 bg-rose-500/50 hover:bg-rose-500 h-8 w-8 rounded-tl border border-rose-500 cursor-pointer"
+									>
+										<BsTrash3Fill className=" text-xl" />
+									</div>
+									<div
+										onClick={(e) => handleChangeThumbnail(image)}
+										className="flex items-center justify-center absolute bottom-0 left-0 bg-amber-500/50 hover:bg-amber-500 h-8 w-8 rounded-tr border border-amber-500 cursor-pointer"
+									>
+										<IoMdImage className=" text-xl" />
+									</div>
+									<img
+										src={image}
+										className="flex h-full w-full aspect-square object-cover border-2 border-white"
+									/>
+								</div>
+							))}
 						</div>
-						<div
-							onClick={(e) => handleChangeThumbnail(image)}
-							className="flex items-center justify-center absolute bottom-0 left-0 bg-amber-500/50 hover:bg-amber-500 h-8 w-8 rounded-tr border border-amber-500 cursor-pointer"
-						>
-							<IoMdImage className=" text-xl" />
-						</div>
-						<img
-							src={image}
-							className="flex h-full w-full aspect-square object-cover border-2 border-white"
-						/>
 					</div>
-				))}
-			</div>
-			<div className="flex flex-row justify-end w-full mt-4">
+					<div className="w-full grid grid-cols-4 gap-2 mt-2">
+						{currentUserProtectedInfo?.images?.slice(5).map((image) => (
+							<div
+								key={image}
+								className="relative flex h-full w-full aspect-square overflow-clip"
+							>
+								<div
+									onClick={() => handleDelete(image)}
+									className="flex items-center justify-center absolute bottom-0 right-0 bg-rose-500/50 hover:bg-rose-500 h-8 w-8 rounded-tl border border-rose-500 cursor-pointer"
+								>
+									<BsTrash3Fill className=" text-xl" />
+								</div>
+								<div
+									onClick={(e) => handleChangeThumbnail(image)}
+									className="flex items-center justify-center absolute bottom-0 left-0 bg-amber-500/50 hover:bg-amber-500 h-8 w-8 rounded-tr border border-amber-500 cursor-pointer"
+								>
+									<IoMdImage className=" text-xl" />
+								</div>
+								<img
+									src={image}
+									className="flex h-full w-full aspect-square object-cover border-2 border-white"
+								/>
+							</div>
+						))}
+					</div>
+				</>
+			)}
+			<div className="flex flex-row justify-end w-full mt-4 pr-8">
 				<button
 					type="submit"
 					className="w-fit border border-amber-400 rounded-lg px-3 py-2 text-amber-400 hover:bg-amber-400 hover:text-black"

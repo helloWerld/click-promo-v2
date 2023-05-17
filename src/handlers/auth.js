@@ -35,7 +35,7 @@ const FirebaseAuth = {
 		const [email, password] = args;
 		return new Promise((resolve) => {
 			try {
-				console.log('loggin in with email');
+				console.log('logged in with email');
 				signInWithEmailAndPassword(auth, email, password)
 					.then((response) => {
 						resolve(response.user);

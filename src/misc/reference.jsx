@@ -23,6 +23,19 @@ import {
 } from 'react-icons/gi';
 import { SiTether, SiDogecoin } from 'react-icons/si';
 import { HiUserGroup } from 'react-icons/hi';
+import {
+	AiOutlineYoutube,
+	AiOutlineFacebook,
+	AiOutlineInstagram,
+	AiOutlineReddit,
+	AiFillYoutube,
+	AiFillFacebook,
+	AiFillInstagram,
+} from 'react-icons/ai';
+import { BsDiscord, BsTwitter } from 'react-icons/bs';
+import { FiTwitter } from 'react-icons/fi';
+import { TbBrandTiktok, TbBrandDiscord, TbBrandTelegram } from 'react-icons/tb';
+import { FaRedditAlien, FaTelegramPlane, FaTiktok } from 'react-icons/fa';
 
 const reference = {
 	// allTopics used in CreatorTopicList and CreatorTopicFilter
@@ -121,6 +134,48 @@ const reference = {
 		'Reddit',
 		'Discord',
 		'Telegram',
+	],
+	allPlatforms: [
+		{
+			name: 'Youtube',
+			icon: <AiOutlineYoutube />,
+			fill: <AiFillYoutube color="red" />,
+		},
+		{
+			name: 'Twitter',
+			icon: <FiTwitter />,
+			fill: <BsTwitter color="#00a9e8" />,
+		},
+		{
+			name: 'Facebook',
+			icon: <AiOutlineFacebook />,
+			fill: <AiFillFacebook color="#4664a5" />,
+		},
+		{
+			name: 'Instagram',
+			icon: <AiOutlineInstagram />,
+			fill: <AiFillInstagram color="#8941a7" />,
+		},
+		{
+			name: 'Tiktok',
+			icon: <TbBrandTiktok />,
+			fill: <FaTiktok color="#25ece7" />,
+		},
+		{
+			name: 'Discord',
+			icon: <TbBrandDiscord />,
+			fill: <BsDiscord color="#5562ea" />,
+		},
+		{
+			name: 'Telegram',
+			icon: <TbBrandTelegram />,
+			fill: <FaTelegramPlane color="#28a5e5" />,
+		},
+		{
+			name: 'Reddit',
+			icon: <AiOutlineReddit />,
+			fill: <FaRedditAlien color="#fe4a00" />,
+		},
 	],
 };
 

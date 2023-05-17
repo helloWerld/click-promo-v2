@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import SocialPlatformList from './SocialPlatformList';
 import PromoDetailModal from '../Modals/PromoDetailModal';
+import { useFirestoreContext } from '../../context/FirestoreContext';
 
 import { FaChevronDown } from 'react-icons/fa';
 
-const PromoOptionsList = ({ creator, promotions, title }) => {
+const PromoOptionsList = () => {
 	const [filter, setFilter] = useState('all');
 	const [showFilters, setShowFilters] = useState(false);
 	const [showPlatform, setShowPlatform] = useState('');
-	const [showDetailModal, setDetailModal] = useState('');
+	const [detailModal, setDetailModal] = useState('');
+	const { state } = useFirestoreContext();
 
 	const handleFilterSelection = (filterName) => {
 		setFilter(filterName);
@@ -28,17 +30,16 @@ const PromoOptionsList = ({ creator, promotions, title }) => {
 		<>
 			<div className="flex flex-col">
 				<div className="flex flex-row justify-between items-center mb-3">
-					<h2 className="font-semibold text-sm">{title}</h2>
+					<h2 className="font-semibold text-sm">Promo Options</h2>
 					<div className="flex flex-row gap-5">
 						<div
-							className={`transition-all duration-300 ease-in-out ${
+							className={`transition-all text-lg duration-300 ease-in-out cursor-pointer ${
 								showFilters ? 'opacity-100' : 'opacity-0'
 							}`}
 						>
 							<SocialPlatformList
-								creatorSocials={creator?.socials}
+								creatorSocials={state?.creatorPublicData?.socials}
 								fill
-								size={20}
 								onclick={handleFilterSelection}
 							/>
 						</div>
@@ -60,7 +61,7 @@ const PromoOptionsList = ({ creator, promotions, title }) => {
 						</div>
 					</div>
 				</div>
-				{promotions
+				{state?.creatorProtectedData?.promotions
 					?.filter((promotion) =>
 						filter === 'all'
 							? promotion
@@ -69,21 +70,17 @@ const PromoOptionsList = ({ creator, promotions, title }) => {
 					.map((promotion) => (
 						<div className="relative" key={promotion.name}>
 							<div
-								className={`invisible md:visible absolute left-10 top-5 bottom-0 transition-all duration-700 ease-in-out -z-10 ${
+								className={`text-3xl invisible md:visible absolute left-10 top-5 bottom-0 transition-all duration-700 ease-in-out -z-10 ${
 									showPlatform == promotion.name ? '-ml-24' : ''
 								}`}
 							>
-								<SocialPlatformList
-									creatorSocials={[promotion]}
-									size={34}
-									fill
-								/>
+								<SocialPlatformList creatorSocials={[promotion]} fill />
 							</div>
 							<div
 								className="bg-white hover:w-full border rounded-xl py-3 px-5 mb-3 hover:shadow-lg transition duration-700 ease-in-out cursor-pointer z-20"
 								onMouseOver={() => setShowPlatform(promotion.name)}
 								onMouseOut={() => setShowPlatform('')}
-								onClick={() => setDetailModal(promotion.name)}
+								onClick={() => setDetailModal(promotion)}
 							>
 								<div className="flex flex-row justify-between">
 									<h2 className="text-xl font-semibold">{promotion.name}</h2>
@@ -98,12 +95,14 @@ const PromoOptionsList = ({ creator, promotions, title }) => {
 						</div>
 					))}
 			</div>
-			{showDetailModal && (
+			{detailModal && (
 				<PromoDetailModal
 					closeModal={closeDetailModal}
-					promotion={promotions.filter((promotion) =>
-						promotion.name.includes(showDetailModal)
-					)}
+					promotion={
+						state?.creatorProtectedData?.promotions?.filter(
+							(promotion) => promotion == detailModal
+						)[0]
+					}
 				/>
 			)}
 		</>
