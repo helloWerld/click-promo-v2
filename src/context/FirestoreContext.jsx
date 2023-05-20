@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useReducer } from 'react';
 import Firestore from '../handlers/firestore';
 import { useAuthContext } from './AuthContext';
 
-const { readDocs, readDoc, writeDoc } = Firestore;
+const { readDocs, readDoc, writeDoc, createNewCreatorAccount } = Firestore;
 
 const Context = createContext();
 
@@ -112,7 +112,6 @@ const FirestoreProvider = ({ children }) => {
 						type: 'SET_CURRENT_USER_PROTECTED_INFO',
 						payload: response,
 					});
-					return response;
 				})
 				.then(
 					readDoc(
@@ -125,7 +124,6 @@ const FirestoreProvider = ({ children }) => {
 							type: 'SET_CURRENT_USER_PUBLIC_INFO',
 							payload: response,
 						});
-						return response;
 					})
 				);
 		} catch (error) {
@@ -167,6 +165,14 @@ const FirestoreProvider = ({ children }) => {
 		}
 	};
 
+	const createAdvertiserAccount = (user) => {
+		console.log('create advertiser account');
+	};
+
+	const createCreatorAccount = (uid, email) => {
+		createNewCreatorAccount(uid, email);
+	};
+
 	const value = useMemo(() => {
 		return {
 			state,
@@ -175,6 +181,8 @@ const FirestoreProvider = ({ children }) => {
 			getCreators,
 			setCurrentUserInfo,
 			saveProfileChanges,
+			createAdvertiserAccount,
+			createCreatorAccount,
 		};
 	}, [
 		state,
@@ -182,6 +190,8 @@ const FirestoreProvider = ({ children }) => {
 		getCreatorData,
 		setCurrentUserInfo,
 		saveProfileChanges,
+		createAdvertiserAccount,
+		createCreatorAccount,
 	]);
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 };

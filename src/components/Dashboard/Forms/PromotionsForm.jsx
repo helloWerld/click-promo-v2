@@ -254,9 +254,11 @@ const PromotionsForm = () => {
 						<div
 							className="flex flex-row items-center gap-1"
 							key={`${promotion.socialName}${promotion.name}`}
-							onClick={() => setDetailModal(promotion)}
 						>
-							<div className="flex flex-row w-full border border-amber-500 rounded-xl my-2 p-3 justify-between hover:bg-amber-500 hover:text-black cursor-pointer transition duration-500 ease-in-out">
+							<div
+								onClick={() => setDetailModal(promotion)}
+								className="flex flex-row w-full border border-amber-500 rounded-xl my-2 p-3 justify-between hover:bg-amber-500 hover:text-black cursor-pointer transition duration-500 ease-in-out"
+							>
 								<div className="flex flex-row gap-6">
 									<div className="flex text-3xl items-center">
 										{

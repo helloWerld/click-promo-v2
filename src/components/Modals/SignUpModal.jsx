@@ -1,45 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { FaFacebookF, FaGoogle, FaTwitter } from 'react-icons/fa';
+import { FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { useMenuContext } from '../../context/MenuContext';
+import { useFirestoreContext } from '../../context/FirestoreContext';
 import bitpromo from '../../assets/bit-promo.png';
 
 const SignUpModal = () => {
-	const { loginWithEmail, loginWithGoogle } = useAuthContext();
+	const { loginWithGoogle, signUpWithEmailPassword } = useAuthContext();
+	const { dispatch } = useMenuContext();
+	const { createCreatorAccount, createAdvertiserAccount } =
+		useFirestoreContext();
 	const [email, setEmail] = useState(null);
 	const [password, setPassword] = useState(null);
 	const [accountType, setAccountType] = useState('creator');
-	const { state, dispatch } = useMenuContext();
+	const [errorMessage, setErrorMessage] = useState();
+	const [buttonText, setButtonText] = useState('Sign Up');
 	const navigate = useNavigate();
 
-	const createAccountWithEmail = (e) => {
+	useEffect(() => {
+		if (buttonText != 'Sign Up') {
+			const delay = setTimeout(() => {
+				setButtonText('Sign Up');
+			}, 1000);
+
+			return () => clearTimeout(delay);
+		}
+	}, [buttonText]);
+
+	useEffect(() => {
+		if (errorMessage != null) {
+			const delay = setTimeout(() => {
+				setErrorMessage(null);
+			}, 5000);
+
+			return () => clearTimeout(delay);
+		}
+	}, [errorMessage]);
+
+	const createAccountWithEmail = async (e) => {
 		e.preventDefault();
+		setButtonText('Creating Account...');
+
 		try {
-			loginWithEmail(email, password)
-				.then(console.log(accountType))
-				.then(dispatch({ type: 'TOGGLE_SIGNUP_MODAL' }));
+			const response = await signUpWithEmailPassword(email, password);
+			console.log(response);
+
+			if (response.isError) {
+				setErrorMessage(response.error.message);
+				setButtonText('Account Creation Failed. Try again.');
+			} else {
+				if (accountType == 'advertiser') {
+					createAdvertiserAccount(response.user, email);
+				} else if (accountType == 'creator') {
+					await createCreatorAccount(response.user.uid, email);
+					setButtonText('Account Created Successfully!');
+					setErrorMessage('');
+					await dispatch({ type: 'TOGGLE_SIGN_UP_MODAL' });
+					navigate('/dashboard');
+				} else {
+					setErrorMessage('Invalid Account Type Selected');
+				}
+			}
 		} catch (error) {
-			console.error;
+			console.log(error);
 		}
 	};
 
-	const createAccountWithGoogle = (e) => {
+	const createAccountWithGoogle = async (e) => {
 		e.preventDefault();
+		setButtonText('Creating Account...');
 		try {
-			loginWithGoogle()
-				.then(console.log(accountType))
-				.then(dispatch({ type: 'TOGGLE_SIGNUP_MODAL' }));
+			const response = await loginWithGoogle();
+			if (response.isError) {
+				setErrorMessage(response.error.message);
+				setButtonText('Account Creation Failed. Try again.');
+			} else {
+				if (accountType == 'advertiser') {
+					createAdvertiserAccount(response.user, response.user.email);
+				} else if (accountType == 'creator') {
+					await createCreatorAccount(response.user.uid, response.user.email);
+					setButtonText('Account Created Successfully!');
+					setErrorMessage('');
+					dispatch({ type: 'TOGGLE_SIGN_UP_MODAL' });
+					navigate('/dashboard');
+				} else {
+					setErrorMessage('Invalid Account Type Selected');
+				}
+			}
 		} catch (error) {
-			console.error;
+			console.log(error);
 		}
 	};
 
 	return (
 		<div
 			className={
-				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-30 items-center justify-center p-0 m-0 bg-scroll'
+				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-40 items-center justify-center p-0 m-0 bg-scroll'
 			}
 			onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 		>
@@ -54,6 +112,11 @@ const SignUpModal = () => {
 						onClick={() => dispatch({ type: 'TOGGLE_SIGNUP_MODAL' })}
 					/>
 					<img src={bitpromo} className="w-1/3 mb-5 mx-auto" />
+					{errorMessage && (
+						<div className="w-full text-center bg-rose-300 py-2 mb-4 rounded-xl">
+							<p>{errorMessage}</p>
+						</div>
+					)}
 					<div className="flex flex-col">
 						<h2 className="text-xl font-semibold">
 							Step 1: <span className="font-normal">Select Account Type</span>
@@ -107,7 +170,7 @@ const SignUpModal = () => {
 							className="bg-gradient-to-tl from-amber-300 to-amber-600 w-full h-12 rounded-lg shadow-sm mt-3  hover:scale-105 hover:shadow-md transition duration-700 ease-in-out"
 							onClick={createAccountWithEmail}
 						>
-							Log In
+							{buttonText}
 						</button>
 					</form>
 					<div className="flex flex-row justify-center items-center gap-5">
@@ -121,10 +184,10 @@ const SignUpModal = () => {
 							<FaGoogle size={18} />
 							<p>Google</p>
 						</div>
-						<div className="flex flex-row justify-center gap-3 cursor-pointer items-center w-full h-12 rounded-lg border border-black shadow-sm p-3  hover:bg-gradient-to-tl hover:from-amber-300 hover:to-amber-600">
+						{/* <div className="flex flex-row justify-center gap-3 cursor-pointer items-center w-full h-12 rounded-lg border border-black shadow-sm p-3  hover:bg-gradient-to-tl hover:from-amber-300 hover:to-amber-600">
 							<FaTwitter size={18} />
 							<p>Twitter</p>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import { useMenuContext } from '../../context/MenuContext';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -7,35 +7,83 @@ import { useNavigate } from 'react-router-dom';
 import bitpromo from '../../assets/bit-promo.png';
 
 const LoginModal = () => {
-	const { loginWithEmail, loginWithGoogle } = useAuthContext();
+	const { logout, loginWithEmail, loginWithGoogle, userData } =
+		useAuthContext();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { state, dispatch } = useMenuContext();
+	const [errorMessage, setErrorMessage] = useState(null);
+	const [buttonText, setButtonText] = useState('Log In');
+	const { dispatch } = useMenuContext();
 	const navigate = useNavigate();
 
-	const signIn = async (e) => {
-		e.preventDefault();
-		try {
-			await loginWithEmail(email, password)
-				.then(dispatch({ type: 'TOGGLE_LOGIN_MODAL' }))
-				.then(navigate('/'));
-		} catch (error) {
-			console.error;
+	useEffect(() => {
+		if (buttonText == 'Login Failed, Try again.') {
+			const delay = setTimeout(() => {
+				setButtonText('Log In');
+			}, 1000);
+
+			return () => clearTimeout(delay);
 		}
+	}, [buttonText]);
+
+	useEffect(() => {
+		if (errorMessage != null) {
+			const delay = setTimeout(() => {
+				setErrorMessage(null);
+			}, 5000);
+
+			return () => clearTimeout(delay);
+		}
+	}, [errorMessage]);
+
+	const signIn = (e) => {
+		e.preventDefault();
+		setButtonText('Logging In');
+		loginWithEmail(email, password)
+			.then(async (response) => {
+				if (response) {
+					setButtonText('Login Failed, Try again.');
+					setErrorMessage(response.error.message);
+				} else {
+					console.log('success sign in');
+					setButtonText('Log In');
+					setErrorMessage('');
+					await dispatch({ type: 'TOGGLE_LOGIN_MODAL' });
+					navigate('/');
+				}
+			})
+			.catch((error) => console.error);
 	};
 
-	const loginUserWithGoogle = () => {
+	const loginUserWithGoogle = async () => {
 		try {
-			loginWithGoogle().then(dispatch({ type: 'TOGGLE_LOGIN_MODAL' }));
+			const response = await loginWithGoogle();
+			console.log(response);
+
+			if (response.isError) {
+				console.log('response isError');
+				setErrorMessage(response.error.message);
+			} else {
+				if (!userData?.role) {
+					console.log('role not null');
+					setErrorMessage('');
+					await dispatch({ type: 'TOGGLE_LOGIN_MODAL' });
+					navigate('/');
+				} else {
+					console.log('role null');
+					logout();
+					setErrorMessage('Account does not exist.');
+				}
+			}
 		} catch (error) {
-			console.error;
+			console.error(error);
 		}
 	};
 
 	return (
 		<div
 			className={
-				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-30 items-center justify-center p-0 m-0 bg-scroll'
+				'fixed top-0 right-0 left-0 bottom-0 flex w-full h-full bg-gray-800/50 z-40 items-center justify-center p-0 m-0 bg-scroll'
 			}
 			onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 		>
@@ -50,6 +98,11 @@ const LoginModal = () => {
 						onClick={() => dispatch({ type: 'TOGGLE_LOGIN_MODAL' })}
 					/>
 					<img src={bitpromo} className="w-1/3 mb-8 mx-auto" />
+					{errorMessage && (
+						<div className="w-full text-center bg-rose-300 py-2 mb-4 rounded-xl">
+							<p>{errorMessage}</p>
+						</div>
+					)}
 					<h2 className="text-xl font-semibold">Login To Your Account</h2>
 					<form className="flex flex-col gap-3 my-5">
 						<input
@@ -69,7 +122,7 @@ const LoginModal = () => {
 							className="bg-gradient-to-tl from-amber-300 to-amber-600 w-full h-12 rounded-lg shadow-sm mt-3  hover:scale-105 hover:shadow-md transition duration-700 ease-in-out"
 							onClick={signIn}
 						>
-							Log In
+							{buttonText}
 						</button>
 					</form>
 					<div className="flex flex-row justify-center items-center gap-5">
@@ -83,10 +136,10 @@ const LoginModal = () => {
 							<FaGoogle size={18} />
 							<p>Google</p>
 						</div>
-						<div className="flex flex-row justify-center gap-3 cursor-pointer items-center w-full h-12 rounded-lg border border-black shadow-sm p-3  hover:bg-gradient-to-tl hover:from-amber-300 hover:to-amber-600">
+						{/* <div className="flex flex-row justify-center gap-3 cursor-pointer items-center w-full h-12 rounded-lg border border-black shadow-sm p-3  hover:bg-gradient-to-tl hover:from-amber-300 hover:to-amber-600">
 							<FaTwitter size={18} />
 							<p>Twitter</p>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>

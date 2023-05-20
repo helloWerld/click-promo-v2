@@ -8,7 +8,7 @@ import { useAuthContext } from '../../context/AuthContext';
 import { useMenuContext } from '../../context/MenuContext';
 
 const CreatorCard = ({ creator }) => {
-	const { currentUser } = useAuthContext();
+	const { userData, currentUser } = useAuthContext();
 	const { menuState, dispatch } = useMenuContext();
 	const {
 		creator_protected_data_ID,
@@ -22,7 +22,7 @@ const CreatorCard = ({ creator }) => {
 	const totalReach = useMemo(
 		() =>
 			socials
-				.map((social) => social.subCount)
+				.map((social) => social?.subCount)
 				.reduce((curr, acc) => Number(curr) + Number(acc), 0)
 				.toLocaleString(),
 		[socials]
@@ -30,13 +30,20 @@ const CreatorCard = ({ creator }) => {
 
 	return (
 		<>
-			<Link to={currentUser ? `/creators/${creator_protected_data_ID}` : '/'}>
+			<Link
+				to={
+					userData?.role == 'advertiser' ||
+					userData?.protected_data_id == creator_protected_data_ID
+						? `/creators/${creator_protected_data_ID}`
+						: '/'
+				}
+			>
 				<div
 					className="flex flex-col items-center h-auto w-auto p-2 hover:cursor-pointer mb-5 mx-2 relative"
 					onMouseOver={() => setHover(true)}
 					onMouseOut={() => setHover(false)}
 				>
-					{!currentUser && (
+					{!currentUser ? (
 						<div
 							className={`${
 								hover ? 'visible' : 'invisible'
@@ -58,6 +65,19 @@ const CreatorCard = ({ creator }) => {
 								Create Account
 							</div>
 						</div>
+					) : userData?.role == 'advertiser' ||
+					  userData?.protected_data_id == creator_protected_data_ID ? (
+						<></>
+					) : (
+						<div
+							className={`${
+								hover ? 'visible' : 'invisible'
+							} absolute w-full h-full top-0 bottom-0 right-0 left-0 bg-black/50 rounded-2xl z-20 items-center justify-center text-center flex flex-col gap-5`}
+						>
+							<h3 className="text-2xl w-2/3 text-white font-semibold mb-5">
+								You must be a verified advertiser to view this page.
+							</h3>
+						</div>
 					)}
 					<div className="flex flex-col items-center relative h-full w-full overflow-clip rounded-2xl">
 						{image ? (
@@ -72,9 +92,9 @@ const CreatorCard = ({ creator }) => {
 							/>
 						)}
 					</div>
-					<div className="flex flex-col w-full px-2 pt-2">
+					<div className="flex flex-col w-full px-2 pt-2 overflow-clip">
 						<div className="flex flex-row items-center justify-between text-xl text-gray-800">
-							<h2 className="font-bold text-black">{name}</h2>
+							<h2 className="max-w-2/3 font-bold text-black">{name}</h2>
 							<div className="flex flex-row items-center gap-1">
 								<AiFillStar />
 								<p>{overallRating}</p>
@@ -86,11 +106,15 @@ const CreatorCard = ({ creator }) => {
 								${totalReach}`}
 							</h3>
 							<div className="flex flex-row text-lg gap-1 my-1">
-								<SocialPlatformList
-									creatorSocials={socials}
-									subs={false}
-									size={18}
-								/>
+								{socials[0].socialName ? (
+									<SocialPlatformList
+										creatorSocials={socials}
+										subs={false}
+										size={18}
+									/>
+								) : (
+									<div className="flex h-2 pb-2 pt-2"></div>
+								)}
 							</div>
 							<h3 className="font-semibold text-sm text-gray-800 mt-1">
 								{message}

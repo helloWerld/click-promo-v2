@@ -25,7 +25,7 @@ const Navbar = () => {
 	return (
 		<>
 			<div
-				className={`sticky top-0 z-20 ${
+				className={`sticky top-0 z-40 ${
 					currentUser
 						? 'bg-gradient-to-br from-amber-600 via-amber-400 to-amber-300 shadow-lg'
 						: 'bg-white'
@@ -67,7 +67,7 @@ const Navbar = () => {
 						<RiAccountCircleFill size={32} />
 					</div>
 					{menuOpen && (
-						<div className="w-64 h-auto absolute top-20 right-12 z-30">
+						<div className="w-64 h-auto absolute top-20 right-12">
 							<div
 								className="flex flex-col w-auto h-auto bg-white border shadow-xl gap-3 w-64 rounded-2xl text-gray-600 py-3"
 								onClick={() => setMenuOpen(false)}

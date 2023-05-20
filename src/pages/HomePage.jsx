@@ -1,10 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import CreatorTopicFilter from '../components/Filters/CreatorTopicFilter';
 import { CreatorCardList } from '../components/Lists';
 import Footer from '../components/Menus/Footer';
-import { useMenuContext } from '../context/MenuContext';
+import { useFirestoreContext } from '../context/FirestoreContext';
+import { useAuthContext } from '../context/AuthContext';
 
 const HomePage = () => {
+	const { getCreators } = useFirestoreContext();
+	const { authenticate, currentUser } = useAuthContext();
+
+	useEffect(() => {
+		getCreators();
+	}, []);
+
+	useEffect(() => {
+		authenticate();
+	}, [currentUser]);
+
 	return (
 		<div className="mb-12">
 			<CreatorTopicFilter />

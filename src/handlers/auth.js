@@ -13,40 +13,32 @@ const googleProvider = new GoogleAuthProvider();
 
 const FirebaseAuth = {
 	// Email Authentication
+	//Sign Up with Email Password
 	signUpWithEmail: (...args) => {
 		const [email, password] = args;
 		return new Promise((resolve) => {
-			try {
-				console.log('creating new user');
-				createUserWithEmailAndPassword(auth, email, password)
-					.then((response) => {
-						resolve(response.user);
-					})
-					.catch((error) => {
-						const errorCode = error.code;
-						const errorMessage = error.message;
-					});
-			} catch (error) {
-				console.log(error);
-			}
+			console.log('creating new user');
+			createUserWithEmailAndPassword(auth, email, password)
+				.then((response) => {
+					resolve({ isError: false, user: response.user });
+				})
+				.catch((error) => {
+					resolve({ isError: true, error });
+				});
 		});
 	},
+	// Login with Email Password
 	signInWithEmail: (...args) => {
 		const [email, password] = args;
 		return new Promise((resolve) => {
-			try {
-				console.log('logged in with email');
-				signInWithEmailAndPassword(auth, email, password)
-					.then((response) => {
-						resolve(response.user);
-					})
-					.catch((error) => {
-						const errorCode = error.code;
-						const errorMessage = error.message;
-					});
-			} catch (error) {
-				console.log(error);
-			}
+			console.log('logged in with email');
+			signInWithEmailAndPassword(auth, email, password)
+				.then((response) => {
+					resolve({ isError: false, user: response.user });
+				})
+				.catch((error) => {
+					resolve({ isError: true, error });
+				});
 		});
 	},
 	// Google Authentication
@@ -54,9 +46,11 @@ const FirebaseAuth = {
 		return new Promise((resolve) => {
 			signInWithPopup(auth, googleProvider)
 				.then((response) => {
-					resolve(response.user);
+					resolve({ isError: false, user: response?.user });
 				})
-				.catch(console.error);
+				.catch((error) => {
+					resolve({ isError: true, error });
+				});
 		});
 	},
 
@@ -81,15 +75,18 @@ const FirebaseAuth = {
 
 	// Set Current UserData on Auth State Change
 	readCurrentUserData: () => {
-		if (auth?.currentUser?.uid != null) {
-			const userId = auth?.currentUser?.uid;
+		console.log('read current user data', auth.currentUser);
+		if (auth.currentUser.uid != null) {
+			console.log(auth.currentUser.uid);
+			const userId = auth.currentUser.uid;
+			console.log(userId);
 			const ref = doc(db, 'user_data', userId);
 			return new Promise(async (resolve) => {
 				try {
 					const docSnap = await getDoc(ref);
-					resolve(docSnap.data());
-				} catch (e) {
-					console.log(e);
+					resolve({ isError: false, data: docSnap.data() });
+				} catch (error) {
+					resolve({ isError: true, error: error });
 				}
 			});
 		} else {

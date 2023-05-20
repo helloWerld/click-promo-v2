@@ -8,14 +8,17 @@ import { useFirestoreContext } from '../../context/FirestoreContext';
 import PhotosForm from './Forms/PhotosForm';
 import PromotionsForm from './Forms/PromotionsForm';
 
-const EditProfile = () => {
+const EditCreatorProfile = () => {
 	const [expanded, setExpanded] = useState(null);
-	const { userData, currentUser } = useAuthContext();
+	const { userData } = useAuthContext();
 	const { setCurrentUserInfo } = useFirestoreContext();
 
 	useEffect(() => {
-		setCurrentUserInfo();
-	}, [currentUser]);
+		console.log('getting current user info');
+		if (userData) {
+			setCurrentUserInfo();
+		}
+	}, []);
 
 	const handleSectionClick = (section) => {
 		expanded == section ? setExpanded(null) : setExpanded(section);
@@ -23,8 +26,8 @@ const EditProfile = () => {
 
 	return (
 		<div className="flex items-start bg-stone-900 h-full w-full overflow-y-auto">
-			<div className="flex flex-col bg-stone-900 text-white w-full items-center justify-center gap-4 py-24">
-				<h2 className="text-2xl mb-2">Edit Your Public Profile</h2>
+			<div className="flex flex-col bg-stone-900 text-white w-full items-center justify-center gap-4">
+				<h2 className="text-2xl mb-2 md:mt-40">Edit Your Public Profile</h2>
 				<Link
 					to={`/creators/${userData?.protected_data_id}`}
 					className="px-3 py-2 mb-10 border border-amber-400 text-amber-400 rounded-lg hover:bg-black"
@@ -64,4 +67,4 @@ const EditProfile = () => {
 	);
 };
 
-export default EditProfile;
+export default EditCreatorProfile;
